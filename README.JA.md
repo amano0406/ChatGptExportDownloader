@@ -24,17 +24,11 @@ ChatGPT のデータエクスポート ZIP が Chrome の通常ダウンロー�
 
 ## 対応OS
 
-現在のアプリは WPF で実装しているため、Windows 専用です。
-
-macOS ではこの WPF アプリは動きません。Macでも使えるようにする場合は、別途 CLI 版を作るか、Avalonia などのクロスプラットフォームUIへ移植する必要があります。
+Windows デスクトップアプリです。
 
 ## 起動
 
-```bat
-C:\CodexWorkspace\ChatGptExportDownloader\start.bat
-```
-
-リポジトリを任意の場所に置いた場合は、そのフォルダ内の `start.bat` を実行してください。
+リリースZIPをダウンロードして展開し、`ChatGptExportDownloader.exe` を起動してください。
 
 ## 使い方
 

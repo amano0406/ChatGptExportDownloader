@@ -24,17 +24,11 @@ ChatGPT Export Downloader is a Windows WPF app for downloading large ChatGPT dat
 
 ## Platform Support
 
-This app is currently Windows-only because it is implemented with WPF.
-
-The WPF app does not run on macOS. Mac support would require a separate CLI build or a cross-platform UI such as Avalonia.
+This is a Windows desktop app.
 
 ## Start The App
 
-```bat
-C:\CodexWorkspace\ChatGptExportDownloader\start.bat
-```
-
-If you cloned the repository somewhere else, run `start.bat` from that folder.
+Download the release ZIP, extract it, and run `ChatGptExportDownloader.exe`.
 
 ## Usage
 
