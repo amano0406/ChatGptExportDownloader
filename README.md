@@ -1,118 +1,120 @@
 # ChatGPT Export Downloader
 
-ChatGPT のデータエクスポート ZIP が Chrome の通常ダウンロードで途中失敗する場合に、Chrome DevTools から取得した認証済みリクエストを使って、ZIP を分割ダウンロードする WPF アプリです。
+[日本語版はこちら](README.JA.md)
 
-## できること
+ChatGPT Export Downloader is a Windows WPF app for downloading large ChatGPT data export ZIP files when Chrome's normal download flow repeatedly fails. It uses an authenticated request copied from Chrome DevTools and downloads the ZIP in sequential HTTP byte ranges.
 
-- Chrome DevTools の `cURL (cmd) としてコピー` を貼り付けて解析
-- URL、Cookie、User-Agent の検出
-- `Range: bytes=0-0` による接続確認とファイルサイズ確認
-- 大きな ZIP を分割して `.part` に保存
-- 途中で止まった場合、同じ `.part` から再開
-- 完了後に ZIP として開けるか検証
+## Features
 
-## 必要なもの
+- Paste and parse Chrome DevTools `Copy as cURL (cmd)` output
+- Detect the request URL, Cookie, User-Agent, and output file name
+- Check connectivity and file size with `Range: bytes=0-0`
+- Download large ZIP files into a resumable `.part` file
+- Resume from an existing `.part` file if the download stops
+- Rename to the final ZIP after completion
+- Verify that the completed file can be opened as a ZIP
+
+## Requirements
 
 - Windows
 - Google Chrome
 - .NET SDK / Runtime
-  - 開発環境では `C:\Program Files\dotnet\dotnet.exe` を使います
-- ChatGPT にログイン済みの Chrome セッション
+  - Development builds use `C:\Program Files\dotnet\dotnet.exe`
+- A Chrome session that is logged in to ChatGPT
 
-## 対応OS
+## Platform Support
 
-現在のアプリは WPF で実装しているため、Windows 専用です。
+This app is currently Windows-only because it is implemented with WPF.
 
-macOS ではこの WPF アプリは動きません。Macでも使えるようにする場合は、別途 CLI 版を作るか、Avalonia などのクロスプラットフォームUIへ移植する必要があります。
+The WPF app does not run on macOS. Mac support would require a separate CLI build or a cross-platform UI such as Avalonia.
 
-## 起動
+## Start The App
 
 ```bat
 C:\CodexWorkspace\ChatGptExportDownloader\start.bat
 ```
 
-リポジトリを任意の場所に置いた場合は、そのフォルダ内の `start.bat` を実行してください。
+If you cloned the repository somewhere else, run `start.bat` from that folder.
 
-## 使い方
+## Usage
 
-### 1. ChatGPT でデータエクスポートを開始する
+### 1. Request a ChatGPT data export
 
-1. ChatGPT を開きます。
-2. 左下のアカウントメニューから `設定` を開きます。
-3. `データ コントロール` を開きます。
-4. `データをエクスポートする` をクリックします。
-5. 必要に応じて認証します。
-6. OpenAI から `ChatGPT - データのエクスポートが開始されました` というメールが届くことを確認します。
-7. しばらく待つと、`ChatGPT - データ エクスポートの準備ができました` というメールが届きます。
+1. Open ChatGPT.
+2. Open the account menu in the lower-left corner.
+3. Open `Settings`.
+4. Open `Data Controls`.
+5. Click `Export data`.
+6. Complete authentication if ChatGPT asks for it.
+7. Confirm that OpenAI sends an email similar to `ChatGPT - Your data export has started`.
+8. Wait for the follow-up email similar to `ChatGPT - Your data export is ready`.
 
-### 2. ダウンロード用リクエストをChrome DevToolsで取得する
+### 2. Copy the authenticated download request from Chrome DevTools
 
-通常はメール内の `データ エクスポートのダウンロード` ボタンを押すとZIPのダウンロードが始まります。  
-この通常ダウンロードが途中で失敗する場合に、このアプリを使います。
+Normally, clicking the email's download button starts the ZIP download directly. Use this app when that normal Chrome download fails partway through.
 
-1. Gmail で `ChatGPT - データ エクスポートの準備ができました` メールを開きます。
-2. `データ エクスポートのダウンロード` ボタンを右クリックします。
-3. `リンクのアドレスをコピー` を選びます。
-4. Chrome で新しいタブを開きます。
-5. `F12` で開発者ツールを開きます。
-6. 開発者ツールの `ネットワーク` タブを開いておきます。
-7. アドレスバーに、先ほどコピーしたリンクを貼り付けて Enter を押します。
-8. ZIP のダウンロードが始まったら、Chrome 右上のダウンロード表示から、そのダウンロードを停止します。
-9. 開発者ツールのネットワーク一覧で、`content?...` のようなリクエストを探します。
-10. そのリクエストを右クリックします。
-11. `コピー` → `cURL (cmd) としてコピー` を選びます。
+1. Open the `ChatGPT - Your data export is ready` email in Gmail.
+2. Right-click the `Download data export` button.
+3. Choose `Copy link address`.
+4. Open a new Chrome tab.
+5. Press `F12` to open DevTools.
+6. Open the `Network` tab in DevTools.
+7. Paste the copied download link into the Chrome address bar and press Enter.
+8. When the ZIP download starts, stop it from Chrome's downloads UI in the upper-right corner.
+9. In the DevTools Network list, find the request that looks like `content?...`.
+10. Right-click that request.
+11. Choose `Copy` -> `Copy as cURL (cmd)`.
 
-この時点でクリップボードに、Cookie などの認証情報を含む長い `curl ...` コマンドが入ります。
+The clipboard now contains a long `curl ...` command that includes authentication data such as cookies.
 
-## アプリでダウンロードする
+## Download With The App
 
-1. `ChatGPT Export Downloader` を起動します。
-2. `入力` 欄に、Chrome DevTools でコピーした `cURL (cmd)` を貼り付けます。
-   - `クリップボードから貼り付け` ボタンでも貼り付けできます。
-3. `解析` を押します。
-4. 以下が `OK` / `検出済み` になっていることを確認します。
+1. Start `ChatGPT Export Downloader`.
+2. Paste the copied `cURL (cmd)` text into the input box.
+   - You can also use the `Paste from clipboard` button.
+3. Click `Analyze`.
+4. Confirm that these fields are detected:
    - URL
    - Cookie
    - User-Agent
-   - ファイル名
-5. 保存先フォルダを `選択` で指定します。
-6. 必要なら出力名を修正します。
-7. `接続確認（サイズ確認）` を押します。
-   - HTTP が `206` になれば分割取得できます。
-   - 総サイズが表示されます。
-8. `ダウンロード開始` を押します。
-9. 完了後、ZIP検証の結果がログに表示されます。
+   - File name
+5. Choose the output directory with `Select`.
+6. Edit the output file name if needed.
+7. Click `Connection check (size check)`.
+   - HTTP `206` means byte-range downloading is available.
+   - The app displays the total file size.
+8. Click `Start download`.
+9. After completion, the ZIP verification result appears in the log.
 
-`分割サイズ` は通常 `128 MiB` のままで問題ありません。接続が不安定な場合は小さくすると、失敗時にやり直す範囲が小さくなります。
+The split size is `128 MiB` by default. Usually you should leave it unchanged. If your network is unstable, using a smaller value reduces the amount of data retried after a failed chunk.
 
-## セキュリティ上の注意
+## Security Notes
 
-`cURL (cmd)` の中には、ChatGPT のログインCookieやCloudflareの認証情報が含まれます。
+The copied `cURL (cmd)` text contains authentication information, including ChatGPT login cookies and Cloudflare-related cookies.
 
-- `cURL (cmd)` の内容をチャットや公開場所に貼らないでください。
-- アプリはCookie本文を画面やログには表示しません。
-- 作業後、必要に応じてChatGPTからログアウトして再ログインしてください。
-- `認証情報を消去` ボタンで貼り付け欄と解析済み情報を消去できます。
+- Do not paste the `cURL (cmd)` text into chat, issues, logs, or public places.
+- The app does not display cookie values in the UI or log.
+- Consider logging out of ChatGPT and logging back in after the download.
+- Use the `Clear secrets` button to clear the pasted text and parsed request information.
 
-## 途中で止まった場合
+## If The Download Stops
 
-同じ保存先と同じ出力名で、もう一度 `ダウンロード開始` を押してください。  
-既存の `.part` ファイルがあれば、そのサイズから再開します。
+Use the same output directory and output file name, then click `Start download` again. If the `.part` file still exists, the app resumes from its current size.
 
-認証切れや `403` が出る場合は、Chrome DevTools で `cURL (cmd) としてコピー` を取り直して、貼り付け直してください。
+If authentication expires or you get `403`, copy a fresh `cURL (cmd)` request from Chrome DevTools and paste it again.
 
-## 開発者向け
+## Development
 
-ビルド:
+Build:
 
 ```bat
 "C:\Program Files\dotnet\dotnet.exe" build ChatGptExportDownloader.slnx
 ```
 
-テスト:
+Test:
 
 ```bat
 "C:\Program Files\dotnet\dotnet.exe" run --project tests\ChatGptExportDownloader.Tests\ChatGptExportDownloader.Tests.csproj
 ```
 
-テストでは実際のChatGPTにはアクセスせず、HTTP Range応答を返す偽ハンドラで分割保存と再開用の基本動作を確認します。
+The tests do not call ChatGPT. They use a fake HTTP handler that returns byte-range responses and verifies the core split-download behavior.
