@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/ChatGptExportDownloader.Core/ChatGptExportDownloader.Core.csproj" />
+    <Project Path="src/ChatGptExportDownloader.Wpf/ChatGptExportDownloader.Wpf.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/ChatGptExportDownloader.Tests/ChatGptExportDownloader.Tests.csproj" />
+  </Folder>
+</Solution>
