@@ -19,6 +19,12 @@ ChatGPT のデータエクスポート ZIP が Chrome の通常ダウンロー�
   - 開発環境では `C:\Program Files\dotnet\dotnet.exe` を使います
 - ChatGPT にログイン済みの Chrome セッション
 
+## 対応OS
+
+現在のアプリは WPF で実装しているため、Windows 専用です。
+
+macOS ではこの WPF アプリは動きません。Macでも使えるようにする場合は、別途 CLI 版を作るか、Avalonia などのクロスプラットフォームUIへ移植する必要があります。
+
 ## 起動
 
 ```bat

@@ -7,3 +7,4 @@ obj/
 *.part
 *.chunk
 *.download-state.json
+artifacts/
